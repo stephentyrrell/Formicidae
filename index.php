@@ -8,5 +8,12 @@ $directions_raw = json_decode(file_get_contents('http://maps.googleapis.com/maps
 $directions = $directions_raw->routes[0]->legs[0]->steps;
 array_unshift($directions, (object) array('distance' => (object) array('value' => 0), 'start_location' => $directions_raw->routes[0]->legs[0]->start_location, 'end_location' => $directions_raw->routes[0]->legs[0]->start_location));
 array_push($directions, (object) array('distance' => (object) array('value' => 0), 'start_location' => $directions_raw->routes[0]->legs[0]->end_location, 'end_location' => $directions_raw->routes[0]->legs[0]->end_location));
-print_r($directions);
+//print_r($directions);
+foreach ($directions as $step_coords) {
+  print_r($step_coords);
+  $step_pic = json_decode(file_get_contents('http://cbk0.google.com/cbk?output=json&ll=' . $step_coords->start_location->lat . ',' . $step_coords->start_location->lng));
+  print_r($step_pic);
+  echo'"<img src="http://cbk0.google.com/cbk?output=thumbnail&w=416&h=208&panoid=' . $step_pic->Location->panoId . '">\n';
+  flush();
+}
 ?>
